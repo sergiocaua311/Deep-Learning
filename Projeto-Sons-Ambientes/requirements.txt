@@ -1,0 +1,19 @@
+# Dependencia de sistema no macOS (instalar antes): brew install ffmpeg
+
+# Deep learning e processamento de audio
+torch
+torchaudio
+librosa
+numpy
+matplotlib
+
+# Hugging Face e treinamento
+datasets[audio]
+transformers
+evaluate
+accelerate
+scikit-learn
+
+# Execucao do notebook
+jupyterlab
+ipykernel

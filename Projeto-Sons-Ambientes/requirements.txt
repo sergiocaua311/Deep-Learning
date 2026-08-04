@@ -1,19 +1,18 @@
-# Dependencia de sistema no macOS (instalar antes): brew install ffmpeg
-
-# Deep learning e processamento de audio
-torch
-torchaudio
-librosa
-numpy
-matplotlib
-
-# Hugging Face e treinamento
-datasets[audio]
-transformers
-evaluate
-accelerate
-scikit-learn
-
-# Execucao do notebook
-jupyterlab
-ipykernel
+# Dependência de sistema no macOS (instalar antes): brew install ffmpeg
+# Versões validadas em Python 3.11.9. Torch e TorchAudio seguem o ambiente
+# usado para produzir a baseline; atualize os dois em conjunto se necessário.
+torch==2.13.0
+torchaudio==2.11.0
+torchcodec==0.15.0
+transformers==5.14.1
+datasets[audio]==5.0.1
+evaluate==0.4.6
+accelerate==1.14.0
+librosa==0.11.0
+soundfile==0.14.0
+numpy==2.4.6
+pandas==3.0.5
+scikit-learn==1.9.0
+matplotlib==3.11.1
+jupyterlab==4.6.2
+ipykernel==7.3.0

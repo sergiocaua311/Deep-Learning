@@ -8,3 +8,9 @@ resultados_ast_esc50/
 resultados_ast_esc50_corrigido/
 modelo_ast_esc50_final/
 modelo_ast_esc50_final_corrigido/
+
+# Saídas reproduzíveis do novo pipeline
+artifacts/
+.coverage
+.pytest_cache/
+.mypy_cache/

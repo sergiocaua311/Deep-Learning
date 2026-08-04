@@ -9,10 +9,12 @@ Este projeto compara quatro formas de representar áudio para classificação:
 | Whisper Tiny | Log-Mel | encoder-decoder de fala | somente o encoder é usado |
 | CNN compacta | Log-Mel | nenhum | baseline leve |
 
-O notebook original foi preservado. Seu AST atingiu **92,75% de acurácia** e
-**92,64% de F1 macro** no fold 5, mas esse fold também escolheu o checkpoint.
-Por isso, esse número é mantido como referência histórica e não é misturado com
-o novo teste cego.
+O notebook principal `notebooks/teste copy.ipynb` reúne o experimento original,
+a comparação de arquiteturas e o roteiro para os slides. Seu AST atingiu
+**92,75% de acurácia** e **92,64% de F1 macro** no fold 5, mas esse fold também
+escolheu o checkpoint. Por isso, esse número é mantido como referência histórica
+e não é misturado com o novo teste cego. O checkpoint existente é reutilizado
+por padrão e o AST não é treinado novamente.
 
 ## Instalação
 
@@ -120,5 +122,6 @@ python -m esc50 summarize \
   --output-dir artifacts/report
 ```
 
-O notebook `notebooks/comparacao_modelos.ipynb` lê esses artefatos e produz as
-tabelas e gráficos finais sem repetir treinamento.
+O notebook `notebooks/teste copy.ipynb` lê esses artefatos e produz as tabelas e
+gráficos finais. As chaves de treinamento e robustez começam desativadas para
+que o material possa ser aberto ou apresentado sem iniciar tarefas demoradas.

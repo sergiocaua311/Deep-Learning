@@ -1,127 +1,64 @@
-# Classificação de sons ambientais — ESC-50
+# Classificação de Sons Ambientais com Deep Learning
 
-Este projeto compara quatro formas de representar áudio para classificação:
+Projeto da disciplina **Aprendizado Profundo**, orientado pelo professor [Tiago Maritan Ugulino de Araujo](http://www.ufpb.br/docente/tiagomaritan), na Universidade Federal da Paraíba.
 
-| Família | Entrada | Pré-treinamento | Papel no experimento |
-|---|---|---|---|
-| AST | Log-Mel em patches | AudioSet | baseline de domínio |
-| Wav2Vec2 Base | forma de onda | fala auto-supervisionada | encoder temporal |
-| Whisper Tiny | Log-Mel | encoder-decoder de fala | somente o encoder é usado |
-| CNN compacta | Log-Mel | nenhum | baseline leve |
+## Equipe
 
-O notebook principal `notebooks/teste copy.ipynb` reúne o experimento original,
-a comparação de arquiteturas e o roteiro para os slides. Seu AST atingiu
-**92,75% de acurácia** e **92,64% de F1 macro** no fold 5, mas esse fold também
-escolheu o checkpoint. Por isso, esse número é mantido como referência histórica
-e não é misturado com o novo teste cego. O checkpoint existente é reutilizado
-por padrão e o AST não é treinado novamente.
+- Matheus Bruno da Silva Oliveira
+- Micael Oliveira de Lima Toscano
+- Sergio Caua dos Santos
 
-## Instalação
+## Objetivo
 
-Requer Python 3.11 e FFmpeg. No macOS:
+Realizar a classificação dos 2.000 áudios do conjunto ESC-50 em 50 categorias de sons ambientais. A solução utiliza o **Audio Spectrogram Transformer (AST)** pré-treinado no AudioSet e ajustado com os folds 1 a 4 do ESC-50. O fold 5 foi utilizado para acompanhamento e avaliação do experimento.
+
+## Resultado registrado
+
+| Métrica | Fold 5 |
+|---|---:|
+| Acurácia | 92,75% |
+| F1 macro | 92,64% |
+| Loss | 0,2183 |
+| Tempo de treinamento | 64,8 min |
+
+Esses valores correspondem à terceira época. Como o fold 5 também orientou a escolha do melhor checkpoint, o resultado é apresentado como avaliação do experimento, e não como estimativa obtida em um teste cego independente.
+
+## Estrutura
+
+```text
+Projeto-Sons-Ambientes/
+├── data/
+│   └── esc50.csv
+├── models/
+│   └── ast_esc50/                 # checkpoint local (ignorado pelo Git)
+├── notebooks/
+│   └── classificacao_sons_ambientais_esc50.ipynb
+├── outputs/
+│   └── ast_esc50/                 # estado do treinamento (ignorado pelo Git)
+├── .gitignore
+├── README.md
+└── requirements.txt
+```
+
+## Execução
+
+Recomenda-se Python 3.11. No macOS, instale o FFmpeg e depois as dependências do projeto:
 
 ```bash
 brew install ffmpeg
-python3.11 -m venv .venv
+python -m venv .venv
 source .venv/bin/activate
-pip install -r requirements.txt
+python -m pip install -r requirements.txt
+jupyter lab
 ```
 
-Os checkpoints públicos são baixados do Hugging Face na primeira execução. As
-execuções escrevem em `artifacts/`, que não é versionado.
+Abra [o notebook principal](notebooks/classificacao_sons_ambientais_esc50.ipynb) e execute as células na ordem. O conjunto ESC-50 é obtido pelo Hugging Face Datasets e, na primeira execução, requer acesso à internet.
 
-## Protocolo recomendado
+O notebook inicia com `EXECUTAR_TREINAMENTO = False`, utilizando o checkpoint local quando ele está disponível. Altere a opção para `True` somente se desejar repetir o treinamento completo; essa etapa é demorada e substitui os artefatos locais.
 
-### 1. Testes rápidos
+## Observações para entrega
 
-```bash
-python -m unittest discover -s tests -v
-```
-
-### 2. Triagem
-
-Treina nos folds 1–3, escolhe a época pelo F1 macro do fold 4 e só então avalia
-o fold 5:
-
-```bash
-python -m esc50 screen
-```
-
-Para conferir o fluxo com poucas amostras antes de iniciar os treinos longos:
-
-```bash
-python -m esc50 screen --max-train-samples 8 --max-eval-samples 4 --epochs 1 --no-roundtrip
-```
-
-Cada run é retomado do checkpoint mais recente. Use `--no-resume` para impedir
-a retomada e `--force` apenas quando quiser executar novamente uma run concluída.
-
-### 3. Validação cruzada
-
-Use os dois modelos registrados em `artifacts/screening/selected_models.json` e
-as melhores épocas da triagem. Por exemplo:
-
-```bash
-python -m esc50 cross-validate \
-  --models ast,whisper \
-  --model-epochs ast=3,whisper=5
-```
-
-Cada fold é avaliado somente depois do treino nos outros quatro. O resumo contém
-média e desvio-padrão de F1 macro e acurácia, além de latência e tamanho.
-
-### 4. Robustez e ablação
-
-```bash
-python -m esc50 robustness \
-  --checkpoint artifacts/cross_validation/ast-cv-fold5-s42/model \
-  --test-fold 5 \
-  --output-dir artifacts/robustness/ast-fold5
-
-python -m esc50 ablation --model ast --epochs 3
-```
-
-A robustez cobre deslocamento de ±0,5 s, ganho de ±6 dB e ruído gaussiano em
-20, 10 e 0 dB de SNR, sempre com sementes determinísticas.
-
-### 5. Modelo final e inferência
-
-Depois de escolher o vencedor pela validação cruzada:
-
-```bash
-python -m esc50 train-final --model ast --epochs 3
-
-python -m esc50 predict \
-  --checkpoint artifacts/final/ast-final-all-folds-s42/model \
-  --audio meu_audio.wav --top-k 5
-
-python -m esc50 explain \
-  --checkpoint artifacts/final/ast-final-all-folds-s42/model \
-  --audio meu_audio.wav \
-  --output-dir artifacts/explanations/meu_audio
-```
-
-O modelo final usa os cinco folds e serve para inferência; ele não recebe uma
-métrica de teste independente. O comando `predict` aceita WAV, MP3 e FLAC.
-
-## Artefatos
-
-Cada execução salva:
-
-- pesos, processador, configuração e model card;
-- métricas, duração, parâmetros, tamanho e latência;
-- previsões, erros de alta confiança e relatório por classe;
-- matriz de confusão e diagrama de confiabilidade;
-- diferença máxima dos logits antes/depois de salvar e recarregar.
-
-Consolide várias execuções com:
-
-```bash
-python -m esc50 summarize \
-  --registry artifacts/screening/registry.csv \
-  --output-dir artifacts/report
-```
-
-O notebook `notebooks/teste copy.ipynb` lê esses artefatos e produz as tabelas e
-gráficos finais. As chaves de treinamento e robustez começam desativadas para
-que o material possa ser aberto ou apresentado sem iniciar tarefas demoradas.
+- O notebook foi entregue sem saídas de execução, caminhos pessoais, mensagens de erro ou tokens.
+- Os diretórios `models/` e `outputs/` não são versionados devido ao tamanho dos artefatos.
+- A semente aleatória usada no experimento é 42.
+- O notebook contém metodologia, resultados, inferência, limitações e referências em uma sequência adequada para apresentação.

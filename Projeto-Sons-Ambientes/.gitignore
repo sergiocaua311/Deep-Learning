@@ -2,15 +2,9 @@
 __pycache__/
 *.py[cod]
 .ipynb_checkpoints/
+.DS_Store
 
-# Artefatos gerados pelo treinamento
-resultados_ast_esc50/
-resultados_ast_esc50_corrigido/
-modelo_ast_esc50_final/
-modelo_ast_esc50_final_corrigido/
-
-# Saídas reproduzíveis do novo pipeline
-artifacts/
-.coverage
-.pytest_cache/
-.mypy_cache/
+# Artefatos locais grandes e arquivos de teste
+models/
+outputs/
+data/audio_exemplo.*

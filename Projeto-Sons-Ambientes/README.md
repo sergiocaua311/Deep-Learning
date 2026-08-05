@@ -30,11 +30,11 @@ Projeto-Sons-Ambientes/
 ├── data/
 │   └── esc50.csv
 ├── models/
-│   └── ast_esc50/                 # checkpoint local (ignorado pelo Git)
+│   └── ast_esc50/               
 ├── notebooks/
 │   └── classificacao_sons_ambientais_esc50.ipynb
 ├── outputs/
-│   └── ast_esc50/                 # estado do treinamento (ignorado pelo Git)
+│   └── ast_esc50/                 
 ├── .gitignore
 ├── README.md
 └── requirements.txt
@@ -55,10 +55,3 @@ jupyter lab
 Abra [o notebook principal](notebooks/classificacao_sons_ambientais_esc50.ipynb) e execute as células na ordem. O conjunto ESC-50 é obtido pelo Hugging Face Datasets e, na primeira execução, requer acesso à internet.
 
 O notebook inicia com `EXECUTAR_TREINAMENTO = False`, utilizando o checkpoint local quando ele está disponível. Altere a opção para `True` somente se desejar repetir o treinamento completo; essa etapa é demorada e substitui os artefatos locais.
-
-## Observações para entrega
-
-- O notebook foi entregue sem saídas de execução, caminhos pessoais, mensagens de erro ou tokens.
-- Os diretórios `models/` e `outputs/` não são versionados devido ao tamanho dos artefatos.
-- A semente aleatória usada no experimento é 42.
-- O notebook contém metodologia, resultados, inferência, limitações e referências em uma sequência adequada para apresentação.

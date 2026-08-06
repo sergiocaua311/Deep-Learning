@@ -16,3 +16,17 @@ Este projeto engloba a implementação e análise de diferentes arquiteturas de 
 - **Autoencoders:** Construção de modelos para compressão/reconstrução de imagens do *Fashion-MNIST* e experimentação com autoencoders voltados para remoção de ruídos (*denoising*).
 
 Para explorar o código e os resultados detalhados, acesse o diretório do projeto: [Pratica-Redes-Neurais](./Pratica-Redes-Neurais/)
+
+---
+
+### 2. Classificação de Sons Ambientais
+
+O segundo projeto consiste no processamento de áudio focado em classificar os 2.000 sons do dataset *ESC-50* em 50 categorias de sons ambientais distintos, alcançando 92,75% de acurácia.
+
+**Tópicos Abordados:**
+- **Processamento de Áudio:** Fundamentos do áudio como vetor temporal (ondas e taxas de amostragem) e extração de características pela transformação em Espectrogramas Log-Mel.
+- **Audio Spectrogram Transformer (AST):** Uso da arquitetura de ponta *Transformer*, que processa os espectrogramas como se fossem imagens divididas em pequenas partes (*patches*) com autoatenção.
+- **Transfer Learning (Fine-Tuning):** Adaptação de um modelo AST previamente treinado no extenso *AudioSet* para a tarefa direcionada de 50 classes.
+- **Treinamento e Inferência com Hugging Face:** Uso de ferramentas da Hugging Face (`transformers`, `datasets`) para baixar os dados, processá-los automaticamente com *feature extractors* e realizar treinamento em GPU, além da visualização espectral dos resultados com `librosa`.
+
+Para explorar o código e os resultados detalhados, acesse o diretório do projeto: [Projeto-Sons-Ambientes](./Projeto-Sons-Ambientes/)
